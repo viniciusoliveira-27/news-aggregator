@@ -23,6 +23,19 @@
   </head>
 
   <body>
-    <%= yield %>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+
+      <div style="margin-bottom: 20px;">
+        <% if user_signed_in? %>
+          <span>Olá, <%= current_user.email %>!</span>
+          <%= button_to "Sair", destroy_user_session_path, method: :delete %>
+        <% else %>
+          <%= link_to "Cadastrar-se", new_user_registration_path %> |
+          <%= link_to "Entrar", new_user_session_path %>
+        <% end %>
+      </div>
+
+  <%= yield %> 
   </body>
 </html>
