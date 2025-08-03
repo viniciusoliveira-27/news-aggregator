@@ -13,7 +13,9 @@ test:
   <<: *default
   database: seu_app_test
 
-production:
+production: &production
   <<: *default
-
   url: <%= ENV['DATABASE_URL'] %>
+
+
+cable: *production
