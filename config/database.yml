@@ -11,18 +11,17 @@ development:
 
 test:
   <<: *default
-  database: seu_app_test
+  database: news_aggregator_test
 
-production:
+# Opção 1: Com DATABASE_URL (mais simples para o Render)
+production: &production
   <<: *default
-  database: news-aggregator-db
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  host: <%= ENV['DATABASE_HOST'] %>
+  url: <%= ENV['DATABASE_URL'] %>
 
-queue:
+
   production:
     <<: *production
 
-
-cable: *production
+cable:
+  production:
+    <<: *production
