@@ -13,9 +13,16 @@ test:
   <<: *default
   database: seu_app_test
 
-production: &production
+production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  database: news-aggregator-db
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+
+queue:
+  production:
+    <<: *production
 
 
 cable: *production
