@@ -4,12 +4,21 @@ class ArticlesController < ApplicationController
   end
 
   def create
+    # Guardamos os dados que vieram do formulário para usar na resposta turbo
+    @api_article_data = article_params.to_h
+
     @article = current_user.articles.new(article_params)
 
-    if @article.save
-      redirect_to search_path(query: params[:article][:query]), notice: "Artigo salvo!"
-    else
-      redirect_to search_path(query: params[:article][:query]), alert: "Não foi possível salvar o artigo."
+    respond_to do |format|
+      if @article.save
+        # A resposta TURBO_STREAM vai renderizar o arquivo create.turbo_stream.erb
+        format.turbo_stream
+        # A resposta HTML (fallback) continua redirecionando
+        format.html { redirect_to search_path(query: params.dig(:article, :query)), notice: "Artigo salvo!" }
+      else
+        # Em caso de falha, não fazemos nada via turbo, apenas redirecionamos no HTML
+        format.html { redirect_to search_path(query: params.dig(:article, :query)), alert: "Não foi possível salvar o artigo." }
+      end
     end
   end
 
