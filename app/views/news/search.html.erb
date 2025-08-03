@@ -1,0 +1,26 @@
+<h1>Busque Notícias</h1>
+
+<%= form_with(url: search_path, method: :get, local: true) do |form| %>
+  <%= form.label :query, "Termo:" %>
+  <%= form.text_field :query %>
+  <%= form.submit "Buscar" %>
+<% end %>
+
+<hr>
+
+<h2>Resultados</h2>
+<div id="articles">
+  <% if @articles.any? %>
+    <ul>
+      <% @articles.each do |article| %>
+        <li>
+          <strong><%= article['title'] %></strong> (<%= article['source']['name'] %>)
+          <br>
+          <%= link_to "Ler artigo completo", article['url'], target: "_blank" %>
+          </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Nenhum artigo encontrado. Faça uma busca acima.</p>
+  <% end %>
+</div>
