@@ -1,40 +1,82 @@
-<%# Container principal para centralizar e dar espaçamento %>
 <div class="container mx-auto px-4 py-8">
 
-  <%# Título da página estilizado %>
-  <h1 class="text-3xl font-bold mb-4">Meus Artigos Salvos</h1>
-
-  <%# Botão de "Voltar" com mais destaque e espaçamento %>
-  <div class="mb-8">
+  <h1 class="text-3xl font-bold mb-2">Meus Artigos Salvos</h1>
+  
+  <%# --- INÍCIO DA SEÇÃO DE FILTRO ATIVO --- %>
+  <% if @filtered_by_tag.present? %>
+    <div class="mb-4 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm">
+      <span class="font-semibold">Filtrando por:</span>
+      <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full"><%= @filtered_by_tag %></span>
+      <%= link_to "× Limpar filtro", articles_path, class: "ml-4 text-blue-600 hover:underline" %>
+    </div>
+  <% end %>
+  <%# --- FIM DA SEÇÃO DE FILTRO ATIVO --- %>
+  
+  <div class="mb-6">
     <%= link_to "← Voltar para a Busca", root_path, class: "text-blue-600 hover:text-blue-800 hover:underline font-medium" %>
   </div>
 
-  <%# Verificamos se há artigos salvos %>
-  <% if @saved_articles.any? %>
-    <%# A lista terá um espaçamento vertical entre cada item (space-y-4) %>
-    <ul class="space-y-4">
-      <% @saved_articles.each do |article| %>
-        <%# Cada item da lista é um "card" com borda, sombra e padding, e alinhado com Flexbox %>
-        <li id="<%= dom_id(article) %>" class="flex items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm">
-          
-          <%# Parte esquerda: Título e fonte %>
-          <div>
-            <%= link_to article.title, article.url, target: "_blank", class: "text-lg font-semibold text-gray-800 hover:text-blue-600" %>
-            <span class="text-sm text-gray-500 block">(<%= article.source_name %>)</span>
-          </div>
+  <%# --- INÍCIO DA NUVEM DE TAGS --- %>
+  <% if @user_tags.any? %>
+    <div class="mb-8 p-4 border rounded-lg">
+      <h3 class="font-semibold mb-2">Filtrar por Tag:</h3>
+      <div class="flex flex-wrap gap-2">
+        <% @user_tags.each do |tag| %>
+          <%# O link passa a tag como parâmetro na URL %>
+          <%= link_to tag.name, articles_path(tag: tag.name), class: "bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium px-3 py-1 rounded-full transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <%# --- FIM DA NUVEM DE TAGS --- %>
 
-          <%# Parte direita: Botão Remover %>
-          <div>
-            <%# Estilos para o botão "Remover", com cor vermelha para indicar uma ação destrutiva %>
-            <%= button_to "Remover", article_path(article), method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200 cursor-pointer" %>
+  <% if @saved_articles.any? %>
+    <ul class="space-y-6">
+      <% @saved_articles.each do |article| %>
+        <li id="<%= dom_id(article) %>" class="p-4 border border-gray-200 rounded-lg shadow-sm">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-grow">
+              <%= link_to article.title, article.url, target: "_blank", class: "text-lg font-semibold text-gray-800 hover:text-blue-600" %>
+              <span class="text-sm text-gray-500 block">(<%= article.source_name %>)</span>
+
+              <div class="mt-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-semibold text-gray-600">Tags:</span>
+                  <% if article.tags.any? %>
+                    <% article.tags.each do |tag| %>
+                      <%# ===== MUDANÇA PRINCIPAL AQUI ===== %>
+                      <%# O span agora é um link_to que filtra a lista %>
+                      <%= link_to tag.name, articles_path(tag: tag.name), class: "bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full transition-colors" %>
+                    <% end %>
+                  <% else %>
+                    <span class="text-xs text-gray-400">Nenhuma</span>
+                  <% end %>
+                </div>
+
+                <%= form_with(model: article, url: article_tags_path(article), method: :post, class: "mt-3 flex items-center gap-2") do |form| %>
+                  <%= form.text_field :tag_list, class: "block w-full max-w-xs p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500", placeholder: "Adicionar tags (ex: ruby, api)" %>
+                  <%= form.submit "Salvar Tags", class: "bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-3 text-sm rounded-lg cursor-pointer transition-colors" %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="flex-shrink-0">
+              <%= button_to "Remover", article_path(article), method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200 cursor-pointer" %>
+            </div>
           </div>
         </li>
       <% end %>
     </ul>
   <% else %>
-    <%# Mensagem para quando não há artigos, também estilizada %>
+    <%# Mensagem para quando não há artigos (ou nenhum corresponde ao filtro) %>
     <div class="text-center p-10 border-2 border-dashed border-gray-300 rounded-lg">
-      <p class="text-gray-500">Você ainda não salvou nenhum artigo.</p>
+      <p class="text-gray-500">
+        <% if @filtered_by_tag.present? %>
+          Nenhum artigo encontrado com a tag "<%= @filtered_by_tag %>".
+        <% else %>
+          Você ainda não salvou nenhum artigo.
+        <% end %>
+      </p>
       <%= link_to "Comece a buscar agora!", root_path, class: "inline-block mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
     </div>
   <% end %>
