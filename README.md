@@ -21,7 +21,7 @@ Esta é uma pequena aplicação web construída com Ruby on Rails que funciona c
 ## Instruções para Setup Local
 
 1.  **Pré-requisitos:**
-    * Ruby (versão X.X.X)
+    * Ruby (versão 3.3.4)
     * Bundler
     * Node.js e Yarn
 
