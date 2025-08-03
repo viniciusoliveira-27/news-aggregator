@@ -71,3 +71,5 @@ gem "rubocop", require: false
 gem "httparty"
 
 gem "tailwindcss-rails", "~> 4.3"
+
+gem "pagy"
