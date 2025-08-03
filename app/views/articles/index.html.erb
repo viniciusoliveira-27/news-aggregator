@@ -1,18 +1,42 @@
-<h1>Meus Artigos Salvos</h1>
+<%# Container principal para centralizar e dar espaçamento %>
+<div class="container mx-auto px-4 py-8">
 
-<div style="margin-bottom: 20px;">
-  <%= link_to "← Voltar para a Busca", root_path %>
+  <%# Título da página estilizado %>
+  <h1 class="text-3xl font-bold mb-4">Meus Artigos Salvos</h1>
+
+  <%# Botão de "Voltar" com mais destaque e espaçamento %>
+  <div class="mb-8">
+    <%= link_to "← Voltar para a Busca", root_path, class: "text-blue-600 hover:text-blue-800 hover:underline font-medium" %>
+  </div>
+
+  <%# Verificamos se há artigos salvos %>
+  <% if @saved_articles.any? %>
+    <%# A lista terá um espaçamento vertical entre cada item (space-y-4) %>
+    <ul class="space-y-4">
+      <% @saved_articles.each do |article| %>
+        <%# Cada item da lista é um "card" com borda, sombra e padding, e alinhado com Flexbox %>
+        <li id="<%= dom_id(article) %>" class="flex items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm">
+          
+          <%# Parte esquerda: Título e fonte %>
+          <div>
+            <%= link_to article.title, article.url, target: "_blank", class: "text-lg font-semibold text-gray-800 hover:text-blue-600" %>
+            <span class="text-sm text-gray-500 block">(<%= article.source_name %>)</span>
+          </div>
+
+          <%# Parte direita: Botão Remover %>
+          <div>
+            <%# Estilos para o botão "Remover", com cor vermelha para indicar uma ação destrutiva %>
+            <%= button_to "Remover", article_path(article), method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200 cursor-pointer" %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <%# Mensagem para quando não há artigos, também estilizada %>
+    <div class="text-center p-10 border-2 border-dashed border-gray-300 rounded-lg">
+      <p class="text-gray-500">Você ainda não salvou nenhum artigo.</p>
+      <%= link_to "Comece a buscar agora!", root_path, class: "inline-block mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  <% end %>
+
 </div>
-
-<% if @saved_articles.any? %>
-  <ul>
-    <% @saved_articles.each do |article| %>
-      <li id="<%= dom_id(article) %>">
-        <%= link_to article.title, article.url, target: "_blank" %> (<%= article.source_name %>)
-        <%= button_to "Remover", article_path(article), method: :delete %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>Você ainda não salvou nenhum artigo. <a href="/">Faça uma busca</a> e comece a salvar!</p>
-<% end %>

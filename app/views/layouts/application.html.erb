@@ -1,22 +1,54 @@
-<body>
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "News Aggregator" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <div style="margin-bottom: 20px; padding: 10px; background-color: #f0f0f0; border-radius: 5px;">
-    <% if user_signed_in? %>
-      <span>Olá, <strong><%= current_user.email %></strong>!</span>
-      <span style="margin: 0 10px;">|</span>
-      <%= link_to "Meus Artigos Salvos", articles_path %>
-      <span style="margin: 0 10px;">|</span>
-      <%= button_to "Sair", destroy_user_session_path, method: :delete, style: "display: inline-block;" %>
-    <% else %>
-      <%= link_to "Cadastrar-se", new_user_registration_path %>
-      <span style="margin: 0 10px;">|</span>
-      <%= link_to "Entrar", new_user_session_path %>
-    <% end %>
-  </div>
-  <%# ========================================== %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
-  <%= yield %> 
-</body>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%# ===== BARRA DE NAVEGAÇÃO COM TAILWIND CSS ===== %>
+    <nav class="flex items-center justify-between p-4 bg-gray-100 rounded-md mb-5">
+      
+      <%# --- Parte Esquerda da Barra --- %>
+      <div>
+        <% if user_signed_in? %>
+          <span class="text-gray-800">Olá, <strong class="font-semibold"><%= current_user.email %></strong>!</span>
+        <% else %>
+          <%= link_to "News Aggregator", root_path, class: "text-xl font-bold text-gray-800" %>
+        <% end %>
+      </div>
+
+      <%# --- Parte Direita da Barra --- %>
+      <div>
+        <% if user_signed_in? %>
+          <div class="flex items-center gap-x-4">
+            <%= link_to "Meus Artigos Salvos", articles_path, class: "text-gray-700 hover:text-blue-600 font-medium" %>
+            <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-md cursor-pointer" %>
+          </div>
+        <% else %>
+          <div class="flex items-center gap-x-4">
+            <%= link_to "Cadastrar-se", new_user_registration_path, class: "text-gray-700 hover:text-blue-600 font-medium" %>
+            <%= link_to "Entrar", new_user_session_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-md" %>
+          </div>
+        <% end %>
+      </div>
+    </nav>
+    <%# =============================================== %>
+
+    <%# Container para centralizar o conteúdo principal da página %>
+    <main class="container mx-auto px-4">
+      <%# As mensagens de alerta e notice aparecerão aqui %>
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      
+      <%= yield %>
+    </main>
+    
+  </body>
 </html>

@@ -1,31 +1,32 @@
-<h1>Busque Notícias</h1>
 
-<%= form_with(url: search_path, method: :get, local: true) do |form| %>
-  <%= form.label :query, "Termo:" %>
-  <%= form.text_field :query %>
-  <%= form.submit "Buscar" %>
-<% end %>
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-4 flex items-center justify-center">Busque Notícias</h1>
 
-<hr>
+  <%= form_with(url: search_path, method: :get, local: true, class: "flex items-center gap-2 mb-8") do |form| %>
+    <%= form.label :query, nil, class: "font-semibold sr-only" %>
+    <%= form.text_field :query, class: "w-full p-2 border border-gray-300 rounded-md" %>
+    <%= form.submit "Buscar", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md cursor-pointer" %>
+  <% end %>
 
-<h2>Resultados</h2>
+  <h2 class="text-2xl font-bold mb-4">Resultados</h2>
 
-<div id="articles">
-  <% if @articles.any? %>
-    <ul>
+  <div id="articles" class="space-y-4">
+    <% if @articles.any? %>
       <% @articles.each do |article| %>
-        <li>
-          <strong><%= article['title'] %></strong> (<%= article['source']['name'] %>)
-          <br>
-          <%= link_to "Ler artigo completo", article['url'], target: "_blank" %>
-
-          <% if user_signed_in? %>
-            <%= button_to "📌 Salvar para Depois", articles_path, params: { article: { title: article['title'], url: article['url'], source_name: article['source']['name'] } } %>
-          <% end %>
-        </li> 
-      <% end %> 
-    </ul> 
-  <% else %>
-    <p>Nenhum artigo encontrado. Faça uma busca acima.</p>
-  <% end %> 
+        <%# Vamos mover isso para um "partial" na próxima parte %>
+        <div class="p-4 border rounded-lg shadow-sm">
+          <strong class="text-lg"><%= article['title'] %></strong> 
+          <span class="text-gray-600">(<%= article['source']['name'] %>)</span>
+          <div class="mt-2">
+            <%= link_to "Ler artigo completo →", article['url'], target: "_blank", class: "text-blue-600 hover:underline" %>
+            <% if user_signed_in? %>
+              <%= button_to "📌 Salvar para Depois", articles_path, params: { article: { title: article['title'], url: article['url'], source_name: article['source']['name'] } }, class: "ml-4 bg-green-500 text-white font-bold py-1 px-2 rounded cursor-pointer" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-gray-500">Nenhum artigo encontrado. Faça uma busca acima.</p>
+    <% end %>
+  </div>
 </div>
