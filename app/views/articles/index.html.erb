@@ -1,0 +1,18 @@
+<h1>Meus Artigos Salvos</h1>
+
+<div style="margin-bottom: 20px;">
+  <%= link_to "← Voltar para a Busca", root_path %>
+</div>
+
+<% if @saved_articles.any? %>
+  <ul>
+    <% @saved_articles.each do |article| %>
+      <li id="<%= dom_id(article) %>">
+        <%= link_to article.title, article.url, target: "_blank" %> (<%= article.source_name %>)
+        <%= button_to "Remover", article_path(article), method: :delete %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Você ainda não salvou nenhum artigo. <a href="/">Faça uma busca</a> e comece a salvar!</p>
+<% end %>

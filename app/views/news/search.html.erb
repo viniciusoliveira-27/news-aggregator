@@ -9,6 +9,7 @@
 <hr>
 
 <h2>Resultados</h2>
+
 <div id="articles">
   <% if @articles.any? %>
     <ul>
@@ -17,10 +18,14 @@
           <strong><%= article['title'] %></strong> (<%= article['source']['name'] %>)
           <br>
           <%= link_to "Ler artigo completo", article['url'], target: "_blank" %>
-          </li>
-      <% end %>
-    </ul>
+
+          <% if user_signed_in? %>
+            <%= button_to "📌 Salvar para Depois", articles_path, params: { article: { title: article['title'], url: article['url'], source_name: article['source']['name'] } } %>
+          <% end %>
+        </li> 
+      <% end %> 
+    </ul> 
   <% else %>
     <p>Nenhum artigo encontrado. Faça uma busca acima.</p>
-  <% end %>
+  <% end %> 
 </div>
