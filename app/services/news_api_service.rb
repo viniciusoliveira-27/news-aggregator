@@ -17,7 +17,6 @@ class NewsApiService
       pageSize: per_page
     }
 
-    # Mescla os parâmetros da busca com as opções default (que contém a chave da API)
     self.class.get("/everything", @options.deep_merge({ query: query_params }))
   end
 end
