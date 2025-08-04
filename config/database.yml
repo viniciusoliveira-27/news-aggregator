@@ -1,21 +1,33 @@
+# config/database.yml
 
+# Bloco padrão que será herdado pelos outros
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+# Configuração para o seu ambiente de desenvolvimento local
 development:
   <<: *default
   database: news_aggregator_development
 
+# Configuração para o ambiente de testes
 test:
   <<: *default
   database: news_aggregator_test
 
+# --- SEÇÃO DE PRODUÇÃO ---
+
+# PASSO 1: Definir a configuração de produção e criar a âncora (&production)
 production: &production
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
 
+# PASSO 2: Reutilizar a configuração para o Action Cable (Solid Cable)
 cable: *production
 
+# PASSO 3: Reutilizar a configuração para o Active Job (Solid Queue)
 queue: *production
+
+# PASSO 4: O FIX FINAL para o Rails Cache (Solid Cache)
+cache: *production
