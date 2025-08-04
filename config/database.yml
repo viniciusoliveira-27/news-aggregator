@@ -1,4 +1,3 @@
-# config/database.yml
 
 default: &default
   adapter: postgresql
@@ -7,21 +6,16 @@ default: &default
 
 development:
   <<: *default
-  database: news_aggregator_development 
+  database: news_aggregator_development
 
 test:
   <<: *default
   database: news_aggregator_test
 
-# Opção 1: Com DATABASE_URL (mais simples para o Render)
 production: &production
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
 
+cable: *production
 
-  production:
-    <<: *production
-
-cable:
-  production:
-    <<: *production
+queue: *production
