@@ -2,7 +2,6 @@
 
   <h1 class="text-3xl font-bold mb-2">Meus Artigos Salvos</h1>
   
-  <%# --- INÍCIO DA SEÇÃO DE FILTRO ATIVO --- %>
   <% if @filtered_by_tag.present? %>
     <div class="mb-4 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm">
       <span class="font-semibold">Filtrando por:</span>
@@ -10,25 +9,21 @@
       <%= link_to "× Limpar filtro", articles_path, class: "ml-4 text-blue-600 hover:underline" %>
     </div>
   <% end %>
-  <%# --- FIM DA SEÇÃO DE FILTRO ATIVO --- %>
   
   <div class="mb-6">
     <%= link_to "← Voltar para a Busca", root_path, class: "text-blue-600 hover:text-blue-800 hover:underline font-medium" %>
   </div>
 
-  <%# --- INÍCIO DA NUVEM DE TAGS --- %>
   <% if @user_tags.any? %>
     <div class="mb-8 p-4 border rounded-lg">
       <h3 class="font-semibold mb-2">Filtrar por Tag:</h3>
       <div class="flex flex-wrap gap-2">
         <% @user_tags.each do |tag| %>
-          <%# O link passa a tag como parâmetro na URL %>
           <%= link_to tag.name, articles_path(tag: tag.name), class: "bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium px-3 py-1 rounded-full transition-colors" %>
         <% end %>
       </div>
     </div>
   <% end %>
-  <%# --- FIM DA NUVEM DE TAGS --- %>
 
   <% if @saved_articles.any? %>
     <ul class="space-y-6">
@@ -44,8 +39,7 @@
                   <span class="text-sm font-semibold text-gray-600">Tags:</span>
                   <% if article.tags.any? %>
                     <% article.tags.each do |tag| %>
-                      <%# ===== MUDANÇA PRINCIPAL AQUI ===== %>
-                      <%# O span agora é um link_to que filtra a lista %>
+
                       <%= link_to tag.name, articles_path(tag: tag.name), class: "bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full transition-colors" %>
                     <% end %>
                   <% else %>
@@ -68,7 +62,6 @@
       <% end %>
     </ul>
   <% else %>
-    <%# Mensagem para quando não há artigos (ou nenhum corresponde ao filtro) %>
     <div class="text-center p-10 border-2 border-dashed border-gray-300 rounded-lg">
       <p class="text-gray-500">
         <% if @filtered_by_tag.present? %>

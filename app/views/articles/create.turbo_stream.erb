@@ -1,17 +1,12 @@
-<%# app/views/articles/create.turbo_stream.erb %>
 
-<%# Gera o mesmo ID único que usamos na página de busca %>
 <% article_dom_id = "search_result_#{Digest::SHA1.hexdigest(@api_article_data[:url])}" %>
 
-<%# Comando para o Turbo: encontre o elemento com este ID e substitua o seu conteúdo %>
 <%= turbo_stream.replace(article_dom_id) do %>
-  <%# Renderizamos o conteúdo atualizado para aquele artigo %>
   <div class="p-4 border rounded-lg shadow-sm">
     <strong class="text-lg"><%= @api_article_data[:title] %></strong> 
     <span class="text-gray-600">(<%= @api_article_data[:source_name] %>)</span>
     <div class="mt-2">
       <%= link_to "Ler artigo completo →", @api_article_data[:url], target: "_blank", class: "text-blue-600 hover:underline" %>
-      <%# Como o artigo foi salvo com sucesso, agora sempre mostramos a mensagem "Salvo!" %>
       <span class="ml-4 font-bold text-green-600">✅ Salvo!</span>
     </div>
   </div>

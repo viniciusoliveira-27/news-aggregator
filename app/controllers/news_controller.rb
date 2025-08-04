@@ -1,7 +1,7 @@
 class NewsController < ApplicationController
   before_action :authenticate_user!, except: [ :search ]
 
-  ITEMS_PER_PAGE = 10 # Defina a constante para evitar números mágicos
+  ITEMS_PER_PAGE = 10
 
 
   def search
