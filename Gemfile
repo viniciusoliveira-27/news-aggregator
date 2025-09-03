@@ -74,4 +74,4 @@ gem "tailwindcss-rails", "~> 4.3"
 
 gem "pagy"
 
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.6"
